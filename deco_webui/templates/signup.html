@@ -1,0 +1,81 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Deco</title>
+<link rel="shortcut icon" type="image/x-icon" href="static/img/favicon.ico" />
+<link rel="stylesheet" href="static/css/bootstrap.min.css?v={{ version }}" />
+
+<style type="text/css">
+html,body{height:100%;}
+div#header{margin-bottom:-96px;height:95px;border-bottom:1px solid #ddd;background:#fafafa;}
+div.container{height:auto;min-height:100%;}
+div#title{height:32px;line-height:32px;padding:16px 0;font-size:28px;color:#444;font-family:'Gill Sans','Gill Sans MT',Arial,sans-serif;}
+span#subtitle{font-size:24px;}
+img#infolab{width:80px;height:63px;padding:16px 0 17px;float:right;display:block;}
+ul.nav-tabs{margin-top:-4px;margin-bottom:0;font-family:'Gill Sans','Gill Sans MT',Arial,sans-serif;font-size:14px;}
+li a:link,a:visited{color:#555;}
+div.top_32px{margin-top:32px;}
+div.bottom_64px{margin-bottom:64px;}
+div#footer{margin-top:-32px;height:31px;border-top:1px solid #ddd;background:#fafafa;line-height:31px;text-align:center;}
+</style>
+<style type="text/css">
+input.textbox{font:inherit;height:22px;margin:4px 0 8px;}
+div#error{color:red}
+button#signup{margin-top:4px;}
+</style>
+</head>
+
+<body>
+
+<div id="header">
+</div>
+
+<div class="container">
+
+  <div class="row">
+    <div class="span10">
+      <div id="title">
+        Deco:
+        <span id="subtitle">
+          A System for Declarative Crowdsourcing
+        </span>
+      </div>
+
+      <ul class="nav nav-tabs">
+        <li><a href="signin">SIGN IN</a></li>
+        <li class="active"><a href="#">SIGN UP</a></li>
+      </ul>
+    </div>
+    <div class="span2">
+      <img id="infolab" alt="InfoLab" src="static/img/infowhite-small.png" height="63" width="80" />
+    </div>
+  </div>
+
+  <div class="row top_32px bottom_64px">
+    <div class="span4 offset4">
+      <div id="error">{{ error }}</div>
+      <form id="signup" action="/signup" method="POST">
+        <label for="user">
+          Username
+          <input class="span4 textbox" type="text" name="user" id="user" tabindex="1" />
+        </label>
+        <label for="pass">
+          Password
+          <input class="span4 textbox" type="password" name="pass" id="pass" tabindex="2" />
+        </label>
+        <label for="pass2">
+          Confirm Password
+          <input class="span4 textbox" type="password" name="pass2" id="pass2" tabindex="3" />
+        </label>
+        <button id="signup" class="btn" type="submit" tabindex="4"><i class="icon-ok"></i> Sign Up</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div id="footer">
+Stanford University InfoLab &copy; 2012
+</div>
+
+</body>
+</html>

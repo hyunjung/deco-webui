@@ -1,0 +1,2 @@
+graft deco_webui/static
+graft deco_webui/templates

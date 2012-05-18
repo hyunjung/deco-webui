@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Deco: {{ database }}</title>
+<link rel="shortcut icon" type="image/x-icon" href="static/img/favicon.ico" />
+<link rel="stylesheet" href="static/css/bootstrap.min.css?v={{ version }}" />
+
+<style type="text/css">
+html,body{height:100%;}
+div#header{margin-bottom:-96px;height:95px;border-bottom:1px solid #ddd;background:#fafafa;}
+div.container{height:auto;min-height:100%;}
+div#title{height:32px;line-height:32px;padding:16px 0;font-size:28px;color:#444;font-family:'Gill Sans','Gill Sans MT',Arial,sans-serif;}
+span#subtitle{font-size:24px;}
+img#infolab{width:80px;height:63px;padding:16px 0 17px;float:right;display:block;}
+ul.nav-tabs{margin-top:-4px;margin-bottom:0;font-family:'Gill Sans','Gill Sans MT',Arial,sans-serif;font-size:14px;}
+li a:link,a:visited{color:#555;}
+div.top_32px{margin-top:32px;}
+div.bottom_64px{margin-bottom:64px;}
+div#footer{margin-top:-32px;height:31px;border-top:1px solid #ddd;background:#fafafa;line-height:31px;text-align:center;}
+</style>
+<style type="text/css">
+textarea#query{height:90px;font:inherit;font-size:16px;}
+img#loading{vertical-align:middle;}
+div#history{display:inline-block;vertical-align:middle;}
+button.btn{height:28px;}
+table.google-visualization-orgchart-table{border-collapse:separate;margin:auto;line-height:normal;}
+td.google-visualization-orgchart-node{font:inherit;font-size:13px;border-width:1px;-moz-border-radius:3px;-webkit-border-radius:3px;-webkit-box-shadow:0 0 0;-moz-box-shadow:0 0 0;}
+table.google-visualization-table-table{font:inherit;width:940px;}
+td.google-visualization-table-th{padding:4px;}
+table#log{font:inherit;}
+</style>
+</head>
+
+<body>
+
+<div id="header">
+</div>
+
+<div class="container">
+
+  <div class="row">
+    <div class="span10">
+      <div id="title">
+        Deco:
+        <span id="subtitle">
+          A System for Declarative Crowdsourcing
+        </span>
+      </div>
+
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#home-pane" data-toggle="tab">HOME</a></li>
+        <li><a href="#log-pane" data-toggle="tab">LOG</a></li>
+        <li><a href="signout">SIGN OUT</a></li>
+      </ul>
+    </div>
+    <div class="span2">
+      <img id="infolab" alt="InfoLab" src="static/img/infowhite-small.png" height="63" width="80" />
+    </div>
+  </div>
+
+  <div class="tab-content top_32px bottom_64px">
+   <div class="tab-pane active" id="home-pane">
+    <div class="row">
+     <div class="span8 offset2">
+      <form id="query-form" action="#">
+        <textarea id="query" class="span8" name="query"></textarea>
+        <div style="float:left;">
+          <div id="history" class="btn-group">
+            <button id="prev" class="btn" type="button"><i class="icon-chevron-left"></i></button><button id="next" class="btn" type="button"><i class="icon-chevron-right"></i></button>
+          </div>
+          <button id="clear" class="btn" type="reset"><i class="icon-remove"></i> Clear</button>
+        </div>
+        <div style="float:right;">
+          <img id="loading" alt="loading" src="static/img/loading.gif" height="24" width="24" />
+          <button id="explain" class="btn" type="submit"><i class="icon-search"></i> Explain</button>
+          <button id="execute" class="btn" type="submit"><i class="icon-play"></i> Execute</button>
+          <button id="stop" class="btn" type="button"><i class="icon-stop"></i> Stop</button>
+        </div>
+      </form>
+     </div>
+    </div>
+
+    <div class="row top_32px">
+     <div class="span8 offset2">
+      <div id="alert">
+      </div>
+     </div>
+     <div class="span12">
+      <div id="result">
+      </div>
+     </div>
+    </div>
+   </div>
+
+   <div class="tab-pane" id="log-pane">
+    <div class="row">
+     <div class="span12">
+       <table id="log" class="table table-striped table-condensed">
+       </table>
+     </div>
+    </div>
+   </div>
+  </div>
+
+</div>
+
+<div id="footer">
+Stanford University InfoLab &copy; 2012
+</div>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script type="text/javascript" src="static/js/bootstrap.min.js?v={{ version }}"></script>
+<script type="text/javascript" src="static/js/deco.js?v={{ version }}"></script>
+
+</body>
+</html>
