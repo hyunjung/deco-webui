@@ -193,7 +193,7 @@ ws1.onmessage = function(e) {
 
 ws2 = new WebSocket('ws://' + location.host + '/log');
 ws2.onopen = function(e) {
-  $("table#log").append('<tr><td style="width:72px;"></td><td style="width:72px;"></td><td class="span10">log stream opened</td></tr>');
+  $("table#log").append('<tr><td class="span2"></td><td class="span2"></td><td class="span8">log stream opened</td></tr>');
 }
 ws2.onerror = function(e) {
   $("table#log").append('<tr><td></td><td></td><td>log stream error</td></tr>');
