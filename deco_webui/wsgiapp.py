@@ -262,7 +262,7 @@ def signin():
         error_message = session.get('error', '')
         session.delete()
         session.save()
-        return dict(error=error_message, version=__version__)
+        return dict(error=error_message)
 
 
 @bottle.post('/signin')
@@ -320,7 +320,7 @@ def signup():
         error_message = session.get('error', '')
         session.delete()
         session.save()
-        return dict(error=error_message, version=__version__)
+        return dict(error=error_message)
 
 
 @bottle.post('/signup')
