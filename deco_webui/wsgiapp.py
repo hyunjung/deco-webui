@@ -87,7 +87,7 @@ def execute(ws, query):
 
     if len(sqls) > 1 and [1 for x in sqls if x[:6].upper() == 'SELECT']:
         ws.send(json.dumps(
-            {'error': 'SELECT statements should be executed separately'}))
+            {'error': 'SELECT statements must be executed alone'}))
         return
 
     try:
@@ -118,11 +118,19 @@ def execute(ws, query):
 
 
 def executebackend(ws, query):
-    sql = bottle.touni(query).strip()
+    sqls = [x[:-1].strip() for x in re.findall(
+        r"(?:[^';]|'(?:\\'|[^'])*')+[^;]*;",
+        bottle.touni(query) + ';')]
+
+    if len(sqls) > 1 and [1 for x in sqls if x[:6].upper() == 'SELECT']:
+        ws.send(json.dumps(
+            {'error': 'SELECT statements must be executed alone'}))
+        return
 
     try:
         with _connect() as conn, closing(conn.cursor()) as cursor:
-            cursor._executebackend(sql)
+            for sql in sqls:
+                cursor._executebackend(sql)
 
             if cursor.description:
                 ws.send(json.dumps(
