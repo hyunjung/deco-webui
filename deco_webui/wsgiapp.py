@@ -19,9 +19,9 @@ import tempfile
 import bottle
 import gevent
 import geventwebsocket
+import psycopg2
 
 import deco
-from deco.config import db
 from deco_webui import __version__
 
 
@@ -35,10 +35,6 @@ app = beaker.middleware.SessionMiddleware(bottle.app(), session_opts)
 connect_kwargs = None
 
 _cursors = {}
-
-
-def _is_single_user():
-    return db.__name__ == 'sqlite3'
 
 
 def _get_session():
@@ -59,13 +55,10 @@ def signed_in(func):
 def _connect():
     session = _get_session()
     try:
-        if _is_single_user():
-            conn = deco.connect(**connect_kwargs)
-        else:
-            conn = deco.connect(database=session['user'],
-                                user=session['user'],
-                                password=session['password'])
-    except (KeyError, db.Error):
+        conn = deco.connect(database=session['user'],
+                            user=session['user'],
+                            password=session['password'])
+    except (KeyError, psycopg2.Error):
         raise RuntimeError('database connection failed')
     return conn
 
@@ -113,7 +106,7 @@ def execute(ws, query):
                 ws.send(json.dumps({'error': None}))
 
     # pylint: disable=W0703
-    except (RuntimeError, deco.Error, db.Error, Exception) as e:
+    except (RuntimeError, deco.Error, psycopg2.Error, Exception) as e:
         ws.send(json.dumps({'error': unicode(e)}))
 
 
@@ -143,7 +136,7 @@ def executebackend(ws, query):
             else:
                 ws.send(json.dumps({'error': None}))
 
-    except (RuntimeError, db.Error) as e:
+    except (RuntimeError, psycopg2.Error) as e:
         ws.send(json.dumps({'error': unicode(e)}))
 
 
@@ -224,7 +217,7 @@ def explain():
         with _connect() as conn, closing(conn.cursor()) as cursor:
             plan = cursor._explain(sqls[0], True)
         error = None
-    except (RuntimeError, deco.Error, db.Error) as e:
+    except (RuntimeError, deco.Error, psycopg2.Error) as e:
         error = unicode(e)
         plan = None
 
@@ -250,10 +243,7 @@ def static(path):
     os.path.join(os.path.dirname(__file__), 'templates', 'index.html'))
 def index():
     session = _get_session()
-    if _is_single_user():
-        database = connect_kwargs['database']
-    else:
-        database = session.get('user')
+    database = session.get('user')
     return dict(database=database, version=__version__)
 
 
@@ -262,15 +252,10 @@ def index():
     os.path.join(os.path.dirname(__file__), 'templates', 'signin.html'))
 def signin():
     session = _get_session()
-    if _is_single_user():
-        session['user'] = '_single'
-        session.save()
-        bottle.redirect('/')
-    else:
-        error_message = session.get('error', '')
-        session.delete()
-        session.save()
-        return dict(error=error_message)
+    error_message = session.get('error', '')
+    session.delete()
+    session.save()
+    return dict(error=error_message)
 
 
 @bottle.post('/signin')
@@ -286,7 +271,7 @@ def do_signin():
 
     try:
         conn = deco.connect(database=user, user=user, password=password)
-    except db.Error as e:
+    except psycopg2.Error as e:
         if 'authentication failed' in unicode(e):
             session['error'] = 'Password authentication failed.'
         elif 'does not exist' in unicode(e):
@@ -320,15 +305,10 @@ def signout():
     os.path.join(os.path.dirname(__file__), 'templates', 'signup.html'))
 def signup():
     session = _get_session()
-    if _is_single_user():
-        session['user'] = '_single'
-        session.save()
-        bottle.redirect('/')
-    else:
-        error_message = session.get('error', '')
-        session.delete()
-        session.save()
-        return dict(error=error_message)
+    error_message = session.get('error', '')
+    session.delete()
+    session.save()
+    return dict(error=error_message)
 
 
 @bottle.post('/signup')
@@ -356,7 +336,7 @@ def do_signup():
         bottle.redirect('/signup')
 
     try:
-        with closing(db.connect(**connect_kwargs)) as dbconn:
+        with closing(psycopg2.connect(**connect_kwargs)) as dbconn:
             with closing(dbconn.cursor()) as dbcur:
                 dbcur.execute('COMMIT')
                 dbcur.execute('CREATE DATABASE "{}"'.format(user))
@@ -365,7 +345,7 @@ def do_signup():
                 dbcur.execute('ALTER DATABASE "{}" OWNER TO "{}"'.format(
                     user, user))
             dbconn.commit()
-    except db.Error as e:
+    except psycopg2.Error as e:
         if 'already exists' in unicode(e):
             session['error'] = 'Username already exists.'
         else:
@@ -398,7 +378,7 @@ def main():
     parser.add_argument(
         '--version', action='version',
         version='Deco-{}, deco-webui-{}'.format(deco.__version__, __version__))
-    if db.__name__ == 'sqlite3':
+    if psycopg2.__name__ == 'sqlite3':
         parser.add_argument(
             '-d', dest='database',
             default=os.path.join(tempfile.gettempdir(), 'deco.db'),
@@ -427,8 +407,8 @@ def main():
 
     # make sure we can connect to the backend database
     try:
-        dbconn = db.connect(**connect_kwargs)
-    except db.Error as e:
+        dbconn = psycopg2.connect(**connect_kwargs)
+    except psycopg2.Error as e:
         sys.exit(unicode(e))
     else:
         dbconn.close()
