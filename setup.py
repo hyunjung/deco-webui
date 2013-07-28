@@ -24,11 +24,11 @@ setup(
     include_package_data=True,
     zip_safe=False,
     install_requires=[
-        'beaker>=1.6.3',
-        'bottle>=0.10',
+        'beaker==1.6.4',
+        'bottle==0.11.6',
         'deco',
-        'gevent-websocket>=0.3',
-        'jinja2>=2.6'],
+        'gevent-websocket==0.3.6',
+        'jinja2==2.7'],
     classifiers=[
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
